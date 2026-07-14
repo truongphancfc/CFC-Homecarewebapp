@@ -97,8 +97,8 @@
               <section class="ctl reveal">
                 <h2><i>3</i>Ảnh &amp; logo</h2>
                 <label class="file-control">
-                  <input id="photoInput" type="file" accept="image/*" />
-                  <span class="file-label"><b>Ảnh nền / sản phẩm</b><small>Chọn ảnh cần gắn khung</small></span>
+                  <input id="photoInput" type="file" accept="image/*" multiple />
+                  <span class="file-label"><b>Ảnh nền / sản phẩm</b><small>Chọn 1 ảnh, hoặc nhiều ảnh để tạo hàng loạt</small></span>
                 </label>
                 <label class="file-control">
                   <input id="nppLogoInput" type="file" accept="image/*" />
@@ -132,22 +132,6 @@
                 </label>
               </section>
 
-              <section class="ctl reveal">
-                <h2><i>5</i>Tạo hàng loạt</h2>
-                <p class="hint">Mỗi dòng: Tên, Khu vực, Số điện thoại, Ghi chú</p>
-                <textarea id="batchInput" rows="4">Đại lý Minh An, TP. Hồ Chí Minh, 0901 234 567, Phân phối chính hãng
-NPP Gia Phát, Đồng Nai, 0912 456 789, Khu vực miền Đông
-Khu vực Cần Thơ, Cần Thơ, 0933 111 222, Tư vấn mở đại lý</textarea>
-                <label class="file-control">
-                  <input id="batchImages" type="file" accept="image/*" multiple />
-                  <span class="file-label"><b>Tải lên ảnh hàng loạt</b><small>Đặt tên file theo tên khách: <i>minh-an.jpg</i>, <i>minh-an-logo.png</i></small></span>
-                </label>
-                <p class="hint" id="batchImgStat"></p>
-                <div class="button-row">
-                  <button type="button" class="secondary" id="makeBatch">Xem trước loạt</button>
-                  <button type="button" class="primary" id="downloadSingle">Tải PNG hiện tại</button>
-                </div>
-              </section>
             </form>
 
             <div class="preview-panel reveal">
