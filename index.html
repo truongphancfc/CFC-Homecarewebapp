@@ -114,8 +114,13 @@
               <section class="ctl reveal">
                 <h2><i>4</i>Thông tin NPP / Đại lý</h2>
                 <label>Tên NPP / Đại lý
-                  <input id="dealerName" value="Đại lý Minh An" />
+                  <span class="combo" id="dealerCombo">
+                    <input id="dealerName" value="" placeholder="Gõ vài chữ để tìm khách hàng…" autocomplete="off" />
+                    <svg class="combo-caret" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="combo-list" id="dealerList" hidden></span>
+                  </span>
                 </label>
+                <p class="combo-status" id="dealerStatus">Đang tải danh sách khách hàng…</p>
                 <label>Khu vực
                   <input id="dealerArea" value="TP. Hồ Chí Minh" />
                 </label>
@@ -133,6 +138,11 @@
                 <textarea id="batchInput" rows="4">Đại lý Minh An, TP. Hồ Chí Minh, 0901 234 567, Phân phối chính hãng
 NPP Gia Phát, Đồng Nai, 0912 456 789, Khu vực miền Đông
 Khu vực Cần Thơ, Cần Thơ, 0933 111 222, Tư vấn mở đại lý</textarea>
+                <label class="file-control">
+                  <input id="batchImages" type="file" accept="image/*" multiple />
+                  <span class="file-label"><b>Tải lên ảnh hàng loạt</b><small>Đặt tên file theo tên khách: <i>minh-an.jpg</i>, <i>minh-an-logo.png</i></small></span>
+                </label>
+                <p class="hint" id="batchImgStat"></p>
                 <div class="button-row">
                   <button type="button" class="secondary" id="makeBatch">Xem trước loạt</button>
                   <button type="button" class="primary" id="downloadSingle">Tải PNG hiện tại</button>

@@ -105,6 +105,7 @@ const state = {
   uploadedImage: null,
   nppLogo: null,
   batchImages: [],
+  batchRows: [],
 };
 
 const PALETTES = {
@@ -281,6 +282,9 @@ function drawWindowPlaceholder(mtr) {
 
 function drawCanvas(customData) {
   const data = customData || readForm();
+  /* ảnh nền/logo: ưu tiên ảnh riêng của từng dòng (batch), nếu không có thì dùng ảnh đơn đang chọn */
+  const bgImage = (data && data.bgImage) || state.uploadedImage;
+  const logoImage = (data && data.logoImage) || state.nppLogo;
   const { width, height } = canvas;
   const palette = PALETTES[state.frame];
   const mtr = frameMetrics(width, height);
@@ -301,10 +305,10 @@ function drawCanvas(customData) {
 
   /* ---------- cửa sổ ảnh ---------- */
   const winPath = roundedRect(winX, winY, winW, winH, winR);
-  if (state.uploadedImage) {
+  if (bgImage) {
     ctx.save();
     ctx.clip(winPath);
-    drawCoverImage(state.uploadedImage, winX, winY, winW, winH);
+    drawCoverImage(bgImage, winX, winY, winW, winH);
     ctx.restore();
   } else {
     ctx.save();
@@ -349,7 +353,7 @@ function drawCanvas(customData) {
   ctx.fillText("✓ NHÀ PHÂN PHỐI CHÍNH THỨC CỦA CFC HOMECARE", m, checkY);
 
   /* ---------- chip logo NPP (góc phải, nếu có) ---------- */
-  const hasLogo = state.nppLogo && state.nppLogo.complete && state.nppLogo.naturalWidth;
+  const hasLogo = logoImage && logoImage.complete && logoImage.naturalWidth;
   if (hasLogo) {
     const chipX2 = width - m - chip;
     ctx.save();
@@ -359,7 +363,7 @@ function drawCanvas(customData) {
     ctx.shadowOffsetY = Math.round(unit * 0.004);
     ctx.fill(roundedRect(chipX2, chipY, chip, chip, chip * 0.24));
     ctx.restore();
-    drawContainImage(state.nppLogo, chipX2 + chip * 0.12, chipY + chip * 0.12, chip * 0.76, chip * 0.76);
+    drawContainImage(logoImage, chipX2 + chip * 0.12, chipY + chip * 0.12, chip * 0.76, chip * 0.76);
   }
 
   /* ---------- footer ---------- */
@@ -457,7 +461,9 @@ function slugify(value) {
     .toLowerCase() || "cfc-homecare";
 }
 
-function parseBatch() {
+/* mỗi dòng batch = { data:{...}, bg:Image|null, logo:Image|null } */
+function parseBatchRows() {
+  const base = readForm();
   return $("#batchInput").value
     .split("\n")
     .map((line) => line.trim())
@@ -465,35 +471,89 @@ function parseBatch() {
     .map((line) => {
       const [name, area, phone, note] = line.split(",").map((part) => part.trim());
       return {
-        ...readForm(),
-        name: name || "Đại lý CFC Homecare",
-        area: area || "Khu vực phân phối",
-        phone: phone || "0900 000 000",
-        note: note || "Phân phối CFC Homecare chính hãng",
+        data: {
+          ...base,
+          name: name || "Đại lý CFC Homecare",
+          area: area || "Khu vực phân phối",
+          phone: phone || "0900 000 000",
+          note: note || "Phân phối CFC Homecare chính hãng",
+        },
+        bg: null,
+        logo: null,
       };
     });
 }
 
+/* dựng lại danh sách dòng, giữ ảnh đã gán cho khách trùng tên */
 function makeBatchPreview() {
+  const previous = state.batchRows || [];
+  state.batchRows = parseBatchRows().map((row) => {
+    const existing = previous.find((p) => p.data.name === row.data.name);
+    if (existing) { row.bg = existing.bg; row.logo = existing.logo; }
+    return row;
+  });
+  renderBatchGallery();
+}
+
+/* vẽ preview + gói url để tải; mỗi dòng dùng ảnh riêng nếu có */
+function renderBatchGallery() {
   const gallery = $("#batchGallery");
   gallery.innerHTML = "";
-  state.batchImages = parseBatch().map((item) => {
-    drawCanvas(item);
-    return {
-      item,
-      url: canvas.toDataURL("image/png"),
-      filename: `cfc-homecare-${slugify(item.name)}-${state.ratio.replace(":", "x")}.png`,
-    };
-  });
-  state.batchImages.forEach((entry, index) => {
+  state.batchImages = [];
+  (state.batchRows || []).forEach((row, index) => {
+    drawCanvas({ ...row.data, bgImage: row.bg, logoImage: row.logo });
+    const url = canvas.toDataURL("image/png");
+    const filename = `cfc-homecare-${slugify(row.data.name)}-${state.ratio.replace(":", "x")}.png`;
+    state.batchImages.push({ url, filename, item: row.data });
+
+    const tags = [row.bg ? "ảnh nền" : null, row.logo ? "logo" : null].filter(Boolean).join(" + ");
     const card = document.createElement("div");
     card.className = "batch-card";
     card.style.animationDelay = `${index * 70}ms`;
-    card.innerHTML = `<img src="${entry.url}" alt="${entry.item.name}"><button type="button">Tải ${entry.item.name}</button>`;
-    card.querySelector("button").addEventListener("click", () => downloadDataUrl(entry.url, entry.filename));
+    card.innerHTML =
+      `<img src="${url}" alt="${escapeHtml(row.data.name)}">` +
+      `<div class="batch-card-meta">${escapeHtml(row.data.name)}` +
+      (tags ? ` · <span class="ok">có ${tags}</span>` : "") +
+      `</div><button type="button">Tải ${escapeHtml(row.data.name)}</button>`;
+    card.querySelector("button").addEventListener("click", () => downloadDataUrl(url, filename));
     gallery.appendChild(card);
   });
   drawCanvas();
+}
+
+/* tải lên hàng loạt ảnh — ghép theo TÊN khách trong tên file; có "logo" trong tên → logo, còn lại → ảnh nền */
+function handleBatchImages(files) {
+  if (!files.length) return;
+  if (!state.batchRows || !state.batchRows.length) makeBatchPreview();
+  let matched = 0;
+  const unmatched = [];
+  let pending = files.length;
+  const finish = () => {
+    if (pending > 0) return;
+    let msg = `Đã gán ${matched}/${files.length} ảnh cho ${state.batchRows.length} khách.`;
+    if (unmatched.length) {
+      msg += ` Bỏ qua (tên file không khớp khách nào): ${unmatched.slice(0, 4).join(", ")}${unmatched.length > 4 ? "…" : ""}`;
+    }
+    $("#batchImgStat").textContent = msg;
+    renderBatchGallery();
+  };
+  files.forEach((file) => {
+    const fileSlug = slugify(file.name.replace(/\.[^.]+$/, ""));
+    const isLogo = /(^|-)(logo)(-|$)/.test(fileSlug);
+    const key = fileSlug.replace(/-(logo|nen|anh-nen|background|bg|anh)$/g, "").replace(/^(logo|nen)-/g, "");
+    const row = (state.batchRows || []).find((r) => {
+      const rowSlug = slugify(r.data.name);
+      return rowSlug && (fileSlug.startsWith(rowSlug) || rowSlug.includes(key) || key.includes(rowSlug));
+    });
+    if (!row) { unmatched.push(file.name); pending -= 1; finish(); return; }
+    const img = new Image();
+    img.onload = () => {
+      if (isLogo) row.logo = img; else row.bg = img;
+      matched += 1; pending -= 1; finish();
+    };
+    img.onerror = () => { unmatched.push(file.name); pending -= 1; finish(); };
+    img.src = URL.createObjectURL(file);
+  });
 }
 
 $$(".ratio-option").forEach((button) => {
@@ -542,13 +602,166 @@ $("#resetImage").addEventListener("click", () => {
   $(`#${id}`).addEventListener("change", () => drawCanvas());
 });
 
+/* ============================================================
+   DANH SÁCH KHÁCH HÀNG — dropdown tự điền
+   Nguồn chính: Google Sheet phòng kinh doanh, đọc trực tiếp mỗi lần mở app
+   (sheet cần chia sẻ "Bất kỳ ai có đường liên kết – Người xem").
+   Khách nhập tay được lưu trên máy (localStorage) để dùng lại lần sau.
+   ============================================================ */
+const SHEET_ID = "1NcdN0cMitE02npXlYqvVhJ90KjVMebNWn49x_ntlnns";
+const SHEET_CSV = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
+const MANUAL_KEY = "cfc_homecare_manual_dealers";
+
+function parseSheetCSV(text) {
+  const rows = [];
+  let row = [], cell = "", quoted = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (quoted) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { cell += '"'; i++; } else quoted = false;
+      } else cell += c;
+    } else if (c === '"') quoted = true;
+    else if (c === ",") { row.push(cell); cell = ""; }
+    else if (c === "\n") { row.push(cell); rows.push(row); row = []; cell = ""; }
+    else if (c !== "\r") cell += c;
+  }
+  if (cell !== "" || row.length) { row.push(cell); rows.push(row); }
+  return rows;
+}
+
+function rowsToDealers(rows) {
+  const headerIdx = rows.findIndex((r) => r.some((c) => /tên khách hàng|ten khach hang/i.test(c)));
+  if (headerIdx < 0) return [];
+  const header = rows[headerIdx].map((c) => (c || "").trim().toLowerCase());
+  const col = (names) => header.findIndex((c) => names.some((n) => c.includes(n)));
+  const cName = col(["tên khách", "ten khach", "tên đại lý"]);
+  const cAddr = col(["địa chỉ", "dia chi"]);
+  const cPhone = col(["sdt", "sđt", "điện thoại"]);
+  const cProduct = col(["sản phẩm", "san pham"]);
+  if (cName < 0) return [];
+  const out = [];
+  for (let i = headerIdx + 1; i < rows.length; i++) {
+    const r = rows[i];
+    const ten = ((r[cName] || "") + "").trim();
+    if (!ten) continue;
+    out.push({
+      ten,
+      sdt: cPhone >= 0 ? ((r[cPhone] || "") + "").trim() : "",
+      dia_chi: cAddr >= 0 ? ((r[cAddr] || "") + "").trim() : "",
+      san_pham: cProduct >= 0 ? ((r[cProduct] || "") + "").trim() : "",
+    });
+  }
+  return out;
+}
+
+let DEALERS = [];
+let manualMode = false;
+const dealerInput = $("#dealerName");
+const dealerList = $("#dealerList");
+const dealerStatus = $("#dealerStatus");
+const escapeHtml = (s) => (s || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const formatPhone = (p) => {
+  const d = (p || "").replace(/\D/g, "");
+  return d.length === 10 ? `${d.slice(0, 4)} ${d.slice(4, 7)} ${d.slice(7)}` : (p || "");
+};
+/* khu vực = 2 cấp cuối của địa chỉ (xã/tỉnh) cho gọn trên ảnh */
+function shortArea(addr) {
+  const parts = (addr || "").split(",").map((s) => s.trim()).filter(Boolean);
+  return parts.length > 2 ? parts.slice(-2).join(", ") : (addr || "");
+}
+function buildNote(sanPham) {
+  if (!sanPham) return "Phân phối CFC Homecare chính hãng";
+  let note = `Chuyên: ${sanPham} — chính hãng`;
+  if (note.length > 90) note = note.slice(0, 89).replace(/[,;\s]+\S*$/, "") + "…";
+  return note;
+}
+function loadManualDealers() {
+  try { return JSON.parse(localStorage.getItem(MANUAL_KEY) || "[]"); } catch (e) { return []; }
+}
+
+function applyDealer(dealer) {
+  manualMode = false;
+  dealerInput.value = dealer.ten;
+  $("#dealerArea").value = shortArea(dealer.dia_chi);
+  $("#dealerPhone").value = formatPhone(dealer.sdt);
+  $("#dealerNote").value = buildNote(dealer.san_pham);
+  dealerList.hidden = true;
+  dealerStatus.textContent = "Đã tự điền tên, khu vực, SĐT, ghi chú — sửa tay được nếu cần.";
+  drawCanvas();
+}
+
+function renderDealerList(query) {
+  const q = (query || "").trim().toLowerCase();
+  const hits = DEALERS.map((d, i) => ({ d, i }))
+    .filter(({ d }) => !q || d.ten.toLowerCase().includes(q) || (d.dia_chi || "").toLowerCase().includes(q));
+  let html = hits.map(({ d, i }) =>
+    `<span class="combo-item" data-i="${i}">${escapeHtml(d.ten)}` +
+    (d.manual ? ' <span class="has-logo">(nhập tay)</span>' : "") +
+    `<small>${escapeHtml(d.dia_chi || "")}${d.sdt ? " · " + escapeHtml(d.sdt) : ""}</small></span>`).join("");
+  if (!hits.length) html = '<span class="combo-empty">Chưa có khách hàng phù hợp trong danh sách.</span>';
+  html += '<span class="combo-item manual" data-manual="1">+ Khách hàng khác (nhập tay)</span>';
+  dealerList.innerHTML = html;
+  dealerList.hidden = false;
+}
+
+dealerInput.addEventListener("focus", () => renderDealerList(dealerInput.value));
+dealerInput.addEventListener("input", () => renderDealerList(dealerInput.value));
+dealerInput.addEventListener("blur", () => window.setTimeout(() => { dealerList.hidden = true; }, 180));
+dealerList.addEventListener("mousedown", (event) => {
+  const item = event.target.closest(".combo-item");
+  if (!item) return;
+  event.preventDefault();
+  if (item.dataset.manual) {
+    manualMode = true;
+    dealerList.hidden = true;
+    dealerStatus.textContent = "Nhập tay: điền tên, khu vực, SĐT. Thông tin được lưu trên máy này để dùng lại lần sau.";
+    dealerInput.focus();
+    return;
+  }
+  applyDealer(DEALERS[Number(item.dataset.i)]);
+});
+
+function saveManualDealer() {
+  if (!manualMode || !dealerInput.value.trim()) return;
+  const ten = dealerInput.value.trim();
+  if (DEALERS.some((d) => d.ten.toLowerCase() === ten.toLowerCase())) return;
+  const record = { ten, sdt: $("#dealerPhone").value, dia_chi: $("#dealerArea").value, san_pham: "", manual: true };
+  const list = loadManualDealers();
+  list.push(record);
+  try { localStorage.setItem(MANUAL_KEY, JSON.stringify(list)); } catch (e) { /* bộ nhớ đầy — bỏ qua */ }
+  DEALERS.push(record);
+}
+
+(async function loadDealers() {
+  const manual = loadManualDealers();
+  try {
+    const res = await fetch(SHEET_CSV, { cache: "no-store" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    /* .normalize("NFC"): Google Sheet trả tiếng Việt dạng tách dấu (NFD), phải gộp về NFC mới so khớp được */
+    const dealers = rowsToDealers(parseSheetCSV((await res.text()).normalize("NFC")));
+    DEALERS = dealers;
+    dealerStatus.textContent = dealers.length
+      ? `✓ ${dealers.length} khách hàng — lấy trực tiếp từ danh sách công ty.`
+      : "✓ Đã kết nối Google Sheet — danh sách đang trống, thêm khách vào sheet là hiện tại đây.";
+  } catch (error) {
+    dealerStatus.textContent = "Chưa đọc được Google Sheet — kiểm tra mạng hoặc quyền chia sẻ. Vẫn nhập tay được bình thường.";
+  }
+  DEALERS = DEALERS.concat(manual.map((m) => ({ ...m, manual: true })));
+})();
+
 $("#downloadSingle").addEventListener("click", () => {
+  saveManualDealer();
   drawCanvas();
   const data = readForm();
   downloadDataUrl(canvas.toDataURL("image/png"), `cfc-homecare-${slugify(data.name)}-${state.ratio.replace(":", "x")}.png`);
 });
 
 $("#makeBatch").addEventListener("click", makeBatchPreview);
+$("#batchImages").addEventListener("change", (event) => {
+  handleBatchImages([...event.target.files]);
+  event.target.value = "";
+});
 $("#downloadAll").addEventListener("click", () => {
   if (!state.batchImages.length) makeBatchPreview();
   state.batchImages.forEach((entry, index) => {
