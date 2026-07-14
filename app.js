@@ -946,9 +946,122 @@ function renderVnMap() {
 }
 
 /* ============================================================
+   CATALOGUE — danh mục sản phẩm (nạp từ data/products.js)
+   ============================================================ */
+function initCatalogue() {
+  const grid = $("#catGrid");
+  const data = window.ZEO_PRODUCT_DATA;
+  if (!grid || !data) return;
+
+  const products = data.products.slice();
+  const brandFilterEl = $("#catBrandFilter");
+  const catFilterEl = $("#catCategoryFilter");
+  const searchEl = $("#catSearch");
+  const countEl = $("#catCount");
+  const emptyEl = $("#catEmpty");
+
+  const filters = { brand: "all", category: "all", q: "" };
+
+  const brandClass = (slug) => (["zeo", "oplus", "pano"].includes(slug) ? slug : "zeo");
+
+  // Build filter chips
+  const brandChips = [{ slug: "all", name: "Tất cả thương hiệu", count: products.length }]
+    .concat(data.brands.map((b) => ({ slug: b.slug, name: b.name, count: b.count })));
+  const catChips = [{ slug: "all", name: "Tất cả loại", count: products.length }]
+    .concat(data.categories.map((c) => ({ slug: c.slug, name: c.name, count: c.count })));
+
+  function renderChips(container, chips, key) {
+    container.innerHTML = "";
+    chips.forEach((chip) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "cat-chip" + (filters[key] === chip.slug ? " active" : "");
+      btn.dataset.value = chip.slug;
+      btn.innerHTML = `${chip.name}<span class="cnt">${chip.count}</span>`;
+      btn.addEventListener("click", () => {
+        filters[key] = chip.slug;
+        container.querySelectorAll(".cat-chip").forEach((el) =>
+          el.classList.toggle("active", el.dataset.value === chip.slug)
+        );
+        render();
+      });
+      container.appendChild(btn);
+    });
+  }
+
+  function render() {
+    const q = filters.q.trim().toLowerCase();
+    const list = products.filter((p) => {
+      if (filters.brand !== "all" && p.brandSlug !== filters.brand) return false;
+      if (filters.category !== "all" && p.categorySlug !== filters.category) return false;
+      if (q) {
+        const hay = `${p.name} ${p.sku || ""} ${(p.tags || []).join(" ")}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    grid.innerHTML = "";
+    list.forEach((p) => {
+      const card = document.createElement("article");
+      card.className = "cat-card";
+      const price = window.formatZeoPrice(p.price) || "Liên hệ";
+      const compare =
+        p.compareAtPrice && p.compareAtPrice > p.price
+          ? `<span class="cat-compare">${window.formatZeoPrice(p.compareAtPrice)}</span>`
+          : "";
+      const off =
+        p.discountPercent && p.discountPercent > 0
+          ? `<span class="cat-off">-${p.discountPercent}%</span>`
+          : "";
+      const badge =
+        p.discountPercent && p.discountPercent > 0
+          ? `<span class="cat-badge">-${p.discountPercent}%</span>`
+          : "";
+      const bc = brandClass(p.brandSlug);
+      const img = p.thumbnail || (p.images && p.images[0]) || "";
+      card.innerHTML = `
+        <div class="cat-thumb">
+          ${badge}
+          <span class="cat-brandtag ${bc}">${p.brand}</span>
+          <img src="${img}" alt="${p.name}" loading="lazy" />
+        </div>
+        <div class="cat-body">
+          <span class="cat-cat">${p.category}</span>
+          <h3 class="cat-name">${p.name}</h3>
+          <div class="cat-price-row">
+            <span class="cat-price">${price}</span>
+            ${compare}
+            ${off}
+          </div>
+          <p class="cat-meta">${p.unit ? "Quy cách: " + p.unit : ""}${p.sku ? " · SKU: " + p.sku : ""}</p>
+          <a class="cat-buy" href="${p.url}" target="_blank" rel="noreferrer">
+            Xem &amp; đặt hàng ↗
+          </a>
+        </div>`;
+      grid.appendChild(card);
+    });
+
+    if (countEl) countEl.textContent = `${list.length} sản phẩm`;
+    if (emptyEl) emptyEl.hidden = list.length !== 0;
+  }
+
+  renderChips(brandFilterEl, brandChips, "brand");
+  renderChips(catFilterEl, catChips, "category");
+  if (searchEl) {
+    searchEl.addEventListener("input", () => {
+      filters.q = searchEl.value;
+      render();
+    });
+  }
+  render();
+}
+
+/* ============================================================
    KHỞI ĐỘNG
    ============================================================ */
 setCanvasRatio(state.ratio);
 updateCalculator();
 renderVnMap();
+initCatalogue();
 activateTab("creator");

@@ -32,6 +32,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.9-3.9a1.5 1.5 0 0 0-2.2 0L6 20"/></svg>
             Tạo ảnh chuyên nghiệp
           </button>
+          <button class="nav-item" data-tab="catalogue" data-title="Danh mục sản phẩm" data-sub="Toàn bộ sản phẩm CFC Homecare — ZeO, Oplus, PANO — lọc theo thương hiệu &amp; loại, xem giá và đặt hàng ngay.">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            Danh mục sản phẩm
+          </button>
           <button class="nav-item" data-tab="profit" data-title="Máy tính lợi nhuận" data-sub="Cho khách hàng thấy ngay: dùng CFC Homecare tiết kiệm hơn bao nhiêu so với sản phẩm thường.">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h2m4 0h2M8 15h2m4 0h2M8 19h2m4 0h2"/></svg>
             Máy tính lợi nhuận
@@ -151,6 +155,32 @@
               <div class="batch-gallery" id="batchGallery" aria-live="polite"></div>
             </div>
           </div>
+        </section>
+
+        <!-- ============ TAB · DANH MỤC SẢN PHẨM (CATALOGUE) ============ -->
+        <section class="tab-panel" id="catalogue">
+          <div class="cat-hero reveal">
+            <span class="eyebrow">Bộ sản phẩm chính hãng</span>
+            <h2>Danh mục sản phẩm <em>CFC Homecare</em></h2>
+            <p class="lead">Đầy đủ nước giặt, giặt xả, rửa chén, lau sàn của ba thương hiệu ZeO — Oplus — PANO. Lọc nhanh, xem giá và đặt hàng trực tiếp.</p>
+          </div>
+
+          <div class="cat-toolbar reveal">
+            <div class="cat-filters">
+              <div class="cat-filter-group" id="catBrandFilter" role="group" aria-label="Lọc theo thương hiệu"></div>
+              <div class="cat-filter-group" id="catCategoryFilter" role="group" aria-label="Lọc theo loại sản phẩm"></div>
+            </div>
+            <div class="cat-search-row">
+              <label class="cat-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                <input id="catSearch" type="search" placeholder="Tìm theo tên hoặc mã SKU…" autocomplete="off" />
+              </label>
+              <span class="cat-count" id="catCount"></span>
+            </div>
+          </div>
+
+          <div class="cat-grid" id="catGrid" aria-live="polite"></div>
+          <p class="cat-empty" id="catEmpty" hidden>Không tìm thấy sản phẩm phù hợp bộ lọc.</p>
         </section>
 
         <!-- ============ TAB 2 · MÁY TÍNH LỢI NHUẬN ============ -->
@@ -318,6 +348,7 @@
       </main>
     </div>
 
+    <script src="./data/products.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>
