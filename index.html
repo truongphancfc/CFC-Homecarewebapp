@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CFC Homecare Studio — Công cụ dành cho NPP & Đại lý</title>
+    <link rel="icon" href="./logo-z-purple.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="aurora" aria-hidden="true"></div>
+
+    <div class="app-shell">
+      <!-- ======================= SIDEBAR ======================= -->
+      <aside class="sidebar">
+        <div class="brand-lockup">
+          <img src="./logo-z-purple.png" alt="Logo Z — CFC Homecare" />
+          <div>
+            <strong>CFC HOMECARE</strong>
+            <span>Chăm sóc gia đình</span>
+          </div>
+        </div>
+
+        <nav class="side-nav" aria-label="Điều hướng chính">
+          <button class="nav-item active" data-tab="creator" data-title="Công cụ tạo ảnh" data-sub="Tạo ấn phẩm chuẩn nhận diện CFC Homecare.">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.9-3.9a1.5 1.5 0 0 0-2.2 0L6 20"/></svg>
+            Tạo ảnh chuyên nghiệp
+          </button>
+          <button class="nav-item" data-tab="catalogue" data-title="Danh mục sản phẩm" data-sub="Toàn bộ sản phẩm CFC Homecare — ZeO, Oplus, PANO — lọc theo thương hiệu &amp; loại, xem giá và đặt hàng ngay.">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            Danh mục sản phẩm
+          </button>
+          <button class="nav-item" data-tab="profit" data-title="Máy tính lợi nhuận" data-sub="Cho khách hàng thấy ngay: dùng CFC Homecare tiết kiệm hơn bao nhiêu so với sản phẩm thường.">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h2m4 0h2M8 15h2m4 0h2M8 19h2m4 0h2"/></svg>
+            Máy tính lợi nhuận
+          </button>
+          <button class="nav-item" data-tab="partner" data-title="Trở thành đối tác" data-sub="Mạng lưới phân phối CFC Homecare đang mở rộng trên cả nước — chào đón NPP & Đại lý mới.">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Trở thành đối tác
+          </button>
+          <button class="nav-item" data-tab="about" data-title="Về chúng tôi" data-sub="Kênh chính thức, sản phẩm và những so sánh thực tế của CFC Homecare.">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
+            Về chúng tôi
+          </button>
+        </nav>
+
+        <div class="product-stack">
+          <p>Bộ sản phẩm</p>
+          <div><span class="swatch purple"></span><strong>ZeO</strong><small>Cao cấp — Tối ưu</small></div>
+          <div><span class="swatch blue"></span><strong>Oplus</strong><small>Sạch sâu — Thơm lâu</small></div>
+          <div><span class="swatch pink"></span><strong>PANO</strong><small>Nâng niu — Cảm xúc</small></div>
+        </div>
+
+        <a class="side-footer" href="https://zeo.vn" target="_blank" rel="noreferrer">zeo.vn ↗</a>
+      </aside>
+
+      <!-- ======================= MAIN ======================= -->
+      <main>
+        <header class="topbar">
+          <div>
+            <h1 id="pageTitle">Công cụ tạo ảnh</h1>
+            <p id="pageSub">Tạo ấn phẩm chuẩn nhận diện — logo Z cố định, tuỳ biến cho từng NPP/Đại lý.</p>
+          </div>
+          <a class="support-link" href="https://zeo.vn" target="_blank" rel="noreferrer">zeo.vn</a>
+        </header>
+
+        <!-- ============ TAB 1 · CÔNG CỤ TẠO ẢNH ============ -->
+        <section class="tab-panel active" id="creator">
+          <div class="creator-layout">
+            <form class="control-panel" id="brandingForm">
+              <section class="ctl reveal">
+                <h2><i>1</i>Kích thước ảnh</h2>
+                <div class="ratio-grid" id="ratioGrid">
+                  <button type="button" class="ratio-option active" data-ratio="4:3"><b>4:3</b><small>Bài đăng</small></button>
+                  <button type="button" class="ratio-option" data-ratio="1:1"><b>1:1</b><small>Vuông</small></button>
+                  <button type="button" class="ratio-option" data-ratio="16:9"><b>16:9</b><small>Cover</small></button>
+                  <button type="button" class="ratio-option" data-ratio="9:16"><b>9:16</b><small>Story</small></button>
+                </div>
+              </section>
+
+              <section class="ctl reveal">
+                <h2><i>2</i>Khung thương hiệu</h2>
+                <div class="frame-grid" id="frameGrid">
+                  <button type="button" class="frame-option active" data-frame="purple">
+                    <span class="chip-grad purple"></span>
+                    <span class="frame-label"><b>Tím</b><small>Sang trọng</small></span>
+                  </button>
+                  <button type="button" class="frame-option" data-frame="blue">
+                    <span class="chip-grad blue"></span>
+                    <span class="frame-label"><b>Xanh</b><small>Hiện đại</small></span>
+                  </button>
+                </div>
+              </section>
+
+              <section class="ctl reveal">
+                <h2><i>3</i>Ảnh &amp; logo</h2>
+                <label class="file-control">
+                  <input id="photoInput" type="file" accept="image/*" multiple />
+                  <span class="file-label"><b>Ảnh nền / sản phẩm</b><small>Chọn 1 ảnh, hoặc nhiều ảnh để tạo hàng loạt</small></span>
+                </label>
+                <label class="file-control">
+                  <input id="nppLogoInput" type="file" accept="image/*" />
+                  <span class="file-label"><b>Logo NPP / Đại lý</b><small>Không bắt buộc — nên dùng PNG nền trong</small></span>
+                </label>
+                <label class="check-row">
+                  <input id="showBrandNames" type="checkbox" checked />
+                  <span class="switch"></span>
+                  Hiển thị brandname <b>ZeO — Oplus — PANO</b>
+                </label>
+              </section>
+
+              <section class="ctl reveal">
+                <h2><i>4</i>Thông tin NPP / Đại lý</h2>
+                <label>Tên NPP / Đại lý
+                  <span class="combo" id="dealerCombo">
+                    <input id="dealerName" value="" placeholder="Gõ vài chữ để tìm khách hàng…" autocomplete="off" />
+                    <svg class="combo-caret" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="combo-list" id="dealerList" hidden></span>
+                  </span>
+                </label>
+                <p class="combo-status" id="dealerStatus">Đang tải danh sách khách hàng…</p>
+                <label>Khu vực
+                  <input id="dealerArea" value="TP. Hồ Chí Minh" />
+                </label>
+                <label>Số điện thoại
+                  <input id="dealerPhone" value="0901 234 567" />
+                </label>
+                <label>Ghi chú ngắn
+                  <input id="dealerNote" value="Phân phối CFC Homecare chính hãng" />
+                </label>
+              </section>
+
+            </form>
+
+            <div class="preview-panel reveal">
+              <div class="preview-toolbar">
+                <div>
+                  <h2>Xem trước</h2>
+                  <p id="canvasMeta">4:3 — 1600 × 1200 px</p>
+                </div>
+                <div class="button-row">
+                  <button type="button" class="secondary" id="resetImage">Xoá ảnh nền</button>
+                  <button type="button" class="primary" id="downloadAll">Tải tất cả PNG</button>
+                </div>
+              </div>
+              <div class="canvas-wrap">
+                <canvas id="brandCanvas" width="1600" height="1200"></canvas>
+              </div>
+              <div class="batch-gallery" id="batchGallery" aria-live="polite"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ TAB · DANH MỤC SẢN PHẨM (CATALOGUE) ============ -->
+        <section class="tab-panel" id="catalogue">
+          <div class="cat-hero reveal">
+            <span class="eyebrow">Bộ sản phẩm chính hãng</span>
+            <h2>Danh mục sản phẩm <em>CFC Homecare</em></h2>
+            <p class="lead">Đầy đủ nước giặt, giặt xả, rửa chén, lau sàn của ba thương hiệu ZeO — Oplus — PANO. Lọc nhanh, xem giá và đặt hàng trực tiếp.</p>
+          </div>
+
+          <div class="cat-toolbar reveal">
+            <div class="cat-filters">
+              <div class="cat-filter-group" id="catBrandFilter" role="group" aria-label="Lọc theo thương hiệu"></div>
+              <div class="cat-filter-group" id="catCategoryFilter" role="group" aria-label="Lọc theo loại sản phẩm"></div>
+            </div>
+            <div class="cat-search-row">
+              <label class="cat-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                <input id="catSearch" type="search" placeholder="Tìm theo tên hoặc mã SKU…" autocomplete="off" />
+              </label>
+              <span class="cat-count" id="catCount"></span>
+            </div>
+          </div>
+
+          <div class="cat-grid" id="catGrid" aria-live="polite"></div>
+          <p class="cat-empty" id="catEmpty" hidden>Không tìm thấy sản phẩm phù hợp bộ lọc.</p>
+        </section>
+
+        <!-- ============ TAB 2 · MÁY TÍNH LỢI NHUẬN ============ -->
+        <section class="tab-panel" id="profit">
+          <div class="calc-hero reveal">
+            <span class="eyebrow">Ước tính cho khách hàng</span>
+            <h2>Dùng CFC Homecare, mỗi năm gia đình bạn <em>tiết kiệm bao nhiêu?</em></h2>
+            <p class="lead">Chọn sản phẩm và kéo thanh trượt theo thói quen giặt giũ của gia đình — con số nói thay lời tư vấn.</p>
+          </div>
+
+          <div class="calc-layout">
+            <div class="calc-controls panel reveal">
+              <h3>Chọn dòng sản phẩm</h3>
+              <div class="product-pick" id="productPick">
+                <button type="button" class="pick active" data-product="zeo">
+                  <span class="swatch purple"></span>
+                  <b>ZeO</b>
+                  <small>Nước giặt cao cấp</small>
+                </button>
+                <button type="button" class="pick" data-product="oplus">
+                  <span class="swatch blue"></span>
+                  <b>Oplus</b>
+                  <small>Giặt xả 2 trong 1</small>
+                </button>
+                <button type="button" class="pick" data-product="pano">
+                  <span class="swatch pink"></span>
+                  <b>PANO</b>
+                  <small>Phổ thông tiết kiệm</small>
+                </button>
+              </div>
+
+              <h3 style="margin-top:26px">Gia đình bạn giặt bao nhiêu lần mỗi tuần?</h3>
+              <div class="slider-block">
+                <div class="slider-value"><span id="washesV">7</span><small>lần / tuần</small></div>
+                <input id="washesR" type="range" min="2" max="21" step="1" value="7" />
+                <div class="ticks"><span>2 lần</span><span>10 lần</span><span>21 lần</span></div>
+              </div>
+              <p class="hint" id="calcHint"></p>
+            </div>
+
+            <div class="calc-result panel accent reveal">
+              <div class="biglbl">Tiết kiệm mỗi năm (ước tính)</div>
+              <div class="bignum"><span id="savedYear">0</span><small>đ</small></div>
+
+              <div class="cost-bars">
+                <div class="cbar">
+                  <div class="cbar-head"><span>CFC Homecare</span><b id="costCfc">0đ/tháng</b></div>
+                  <div class="cbar-track"><i class="cfc" id="barCfc"></i></div>
+                </div>
+                <div class="cbar">
+                  <div class="cbar-head"><span>Sản phẩm thường</span><b id="costMarket">0đ/tháng</b></div>
+                  <div class="cbar-track"><i class="mkt" id="barMarket"></i></div>
+                </div>
+              </div>
+
+              <div class="calc-rows" id="calcRows"></div>
+              <p class="disclaimer">Ước tính minh hoạ theo định mức khuyến nghị; chi phí thực tế thay đổi theo lượng đồ và thói quen sử dụng.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ TAB 3 · TRỞ THÀNH ĐỐI TÁC ============ -->
+        <section class="tab-panel" id="partner">
+          <div class="partner-hero reveal">
+            <div class="partner-copy">
+              <span class="eyebrow">Hợp tác kinh doanh</span>
+              <h2>Trở thành đối tác<br /><em>của chúng tôi</em></h2>
+              <p class="lead">CFC Homecare đang mở rộng mạng lưới nhà phân phối và đại lý trên cả nước. Chiết khấu cạnh tranh, hỗ trợ truyền thông và công cụ bán hàng sẵn dùng.</p>
+              <div class="partner-benefits">
+                <div class="benefit reveal"><b>Chính sách rõ ràng</b><small>Chiết khấu &amp; thưởng doanh số minh bạch theo quý</small></div>
+                <div class="benefit reveal"><b>Độc quyền khu vực</b><small>Bảo vệ địa bàn cho NPP tiên phong</small></div>
+                <div class="benefit reveal"><b>Hỗ trợ truyền thông</b><small>Ấn phẩm, video, nội dung social sẵn dùng</small></div>
+                <div class="benefit reveal"><b>Sản phẩm khác biệt</b><small>Công nghệ enzyme Đan Mạch, lưu hương Pháp</small></div>
+              </div>
+            </div>
+            <div class="partner-map reveal">
+              <svg id="vnMap" viewBox="0 0 100 200" role="img" aria-label="Bản đồ biểu trưng mạng lưới phân phối Việt Nam"></svg>
+              <div class="map-caption">Mạng lưới phân phối đang mở rộng khắp ba miền</div>
+            </div>
+          </div>
+
+          <div class="contact-grid">
+            <article class="contact-card reveal">
+              <span class="region">Miền Nam</span>
+              <h3>Mr. Minh Toàn</h3>
+              <a class="phone" href="tel:0919027948">0919 027 948</a>
+              <p>Liên hệ mở nhà phân phối, đại lý hoặc trao đổi cơ hội giám sát khu vực.</p>
+              <a class="cta" href="tel:0919027948">Gọi ngay</a>
+            </article>
+            <article class="contact-card reveal">
+              <span class="region">Miền Đông &amp; Bắc</span>
+              <h3>Mr. Huy Minh</h3>
+              <a class="phone" href="tel:0916413878">0916 413 878</a>
+              <p>Hỗ trợ thông tin khu vực, chính sách phân phối và ứng tuyển giám sát.</p>
+              <a class="cta" href="tel:0916413878">Gọi ngay</a>
+            </article>
+          </div>
+        </section>
+
+        <!-- ============ TAB 4 · VỀ CHÚNG TÔI ============ -->
+        <section class="tab-panel" id="about">
+          <div class="about-hero reveal">
+            <span class="eyebrow">CFC Homecare</span>
+            <h2>Sạch chuẩn công nghệ, <em>chăm sóc như người nhà</em></h2>
+            <p class="lead">Theo dõi kênh chính thức để xem thực nghiệm, mẹo giặt giũ và ưu đãi mới nhất từ CFC Homecare.</p>
+          </div>
+
+          <div class="channel-grid">
+            <a class="channel-card tiktok reveal" href="https://www.tiktok.com/@cfchomecare" target="_blank" rel="noreferrer">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.6 7.1a5 5 0 0 1-3.5-1.4 5 5 0 0 1-1.5-3.2h-3.2v13.2a2.9 2.9 0 1 1-2.9-2.9c.3 0 .6 0 .9.1V9.6a6.6 6.6 0 0 0-.9-.1 6.2 6.2 0 1 0 6.2 6.2V9.9a8.2 8.2 0 0 0 4.9 1.6z"/></svg>
+              <b>TikTok</b>
+              <span>@cfchomecare</span>
+              <small>Video thực nghiệm &amp; mẹo hay mỗi ngày</small>
+            </a>
+            <a class="channel-card youtube reveal" href="https://www.youtube.com/@zeovietnamofficial" target="_blank" rel="noreferrer">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.2s-.2-1.6-.9-2.3c-.9-.9-1.9-.9-2.4-1C16.6 3.6 12 3.6 12 3.6s-4.6 0-7.7.3c-.5.1-1.5.1-2.4 1-.7.7-.9 2.3-.9 2.3S.8 9.1.8 11v1.8c0 1.9.2 3.8.2 3.8s.2 1.6.9 2.3c.9.9 2 .9 2.5 1 1.9.2 7.6.3 7.6.3s4.6 0 7.7-.4c.5-.1 1.5-.1 2.4-1 .7-.7.9-2.3.9-2.3s.2-1.9.2-3.8V11c0-1.9-.2-3.8-.2-3.8zM9.8 15V8.4l6.2 3.3z"/></svg>
+              <b>YouTube</b>
+              <span>@zeovietnamofficial</span>
+              <small>Review sản phẩm &amp; so sánh chi tiết</small>
+            </a>
+            <a class="channel-card shopee reveal" href="https://shopee.vn/zeovietnamofficial" target="_blank" rel="noreferrer">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.8c2 0 3.7 1.6 3.8 3.6h3.6c.6 0 1 .4 1.1 1l1 14c0 .6-.4 1.1-1 1.1H3.5c-.6 0-1.1-.5-1-1.1l1-14c0-.6.5-1 1-1h3.7c.1-2 1.7-3.6 3.8-3.6zm0 1.6c-1.2 0-2.1.9-2.2 2h4.4c-.1-1.1-1-2-2.2-2zm.1 5.1c-1.9 0-3.3 1-3.3 2.6 0 1.7 1.5 2.2 3 2.7 1.5.4 2.2.7 2.2 1.5s-.8 1.2-1.9 1.2c-1 0-2-.4-2.8-1l-.8 1.2c1 .8 2.3 1.3 3.6 1.3 2 0 3.4-1 3.4-2.8 0-1.8-1.6-2.3-3-2.7-1.4-.4-2.1-.7-2.1-1.4 0-.7.7-1.1 1.7-1.1.9 0 1.8.3 2.4.8l.8-1.2c-.9-.7-2-1.1-3.2-1.1z"/></svg>
+              <b>Shopee</b>
+              <span>zeovietnamofficial</span>
+              <small>Mua chính hãng — ưu đãi độc quyền sàn</small>
+            </a>
+          </div>
+
+          <div class="lineup reveal">
+            <div class="lineup-copy">
+              <h3>Ba dòng sản phẩm — một chuẩn sạch</h3>
+              <p>Từ nước giặt cao cấp ZeO, giặt xả 2 trong 1 Oplus đến PANO phổ thông tiết kiệm — tất cả cùng cam kết: sạch sâu, lành với da, thơm dịu bền lâu.</p>
+            </div>
+            <div class="lineup-shelf">
+              <figure><img src="./product-zeo.png" alt="Nước giặt ZeO BiO" /><figcaption>ZeO</figcaption></figure>
+              <figure><img src="./product-oplus.png" alt="Nước giặt xả Oplus 2 trong 1" /><figcaption>Oplus</figcaption></figure>
+              <figure><img src="./product-pano.png" alt="Nước giặt PANO" /><figcaption>PANO</figcaption></figure>
+            </div>
+          </div>
+
+          <div class="compare-block">
+            <div class="compare-head reveal">
+              <span class="eyebrow">So sánh thực tế</span>
+              <h3>Không nói suông — xem là tin</h3>
+            </div>
+            <div class="compare-grid">
+              <article class="compare-card reveal">
+                <b>Vết bẩn cứng đầu</b>
+                <p>Cà phê, dầu mỡ, cổ áo ố vàng — thử thách trực tiếp giữa ZeO và nước giặt thường trên cùng một vết bẩn.</p>
+                <a href="https://www.tiktok.com/@cfchomecare" target="_blank" rel="noreferrer">Xem thực nghiệm ↗</a>
+              </article>
+              <article class="compare-card reveal">
+                <b>Độ lưu hương</b>
+                <p>Đo độ thơm sau 24h — 48h — 72h phơi ngoài trời. Công nghệ lưu hương giúp Oplus giữ mùi lâu hơn rõ rệt.</p>
+                <a href="https://www.youtube.com/@zeovietnamofficial" target="_blank" rel="noreferrer">Xem thực nghiệm ↗</a>
+              </article>
+              <article class="compare-card reveal">
+                <b>Chi phí mỗi lần giặt</b>
+                <p>Cùng khối lượng đồ, đong đúng định mức — so sánh chi phí thật giữa CFC Homecare và các sản phẩm cùng phân khúc.</p>
+                <button type="button" data-goto="profit">Tự tính ngay →</button>
+              </article>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./products.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
